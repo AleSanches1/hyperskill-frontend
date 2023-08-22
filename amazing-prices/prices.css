@@ -57,6 +57,70 @@ a {
     flex-grow: 1;
     min-height: calc(100% - 122px); /* Subtract header and footer heights */
 }
+.section_1{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    box-sizing: border-box;
+    padding: 17px 283px 45px 283px;
+}
+h1 {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: normal;
+    padding-bottom: 15px;
+}
+.section_1 p{
+    font-size: 16px;
+}
+.section_2{
+    display: flex;
+    margin: 0 104px;
+    justify-content: space-between;
+}
+.card{
+    background-color: #F5F5F5;
+    border: 1px solid black;
+    border-radius: 10px;
+    width: 200px;
+    height: 250px;
+    box-sizing: border-box;
+    text-align: center;
+}
+.card-header{
+    font-size: 16px;
+    font-weight: 700;
+    border-bottom: 1px solid black;
+    padding-top: 5px;
+    padding-bottom: 14px;
+
+}
+.card-body{
+    padding-top: 15px;
+    padding-bottom: 13px;
+}
+.card-body h3 {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 29px;
+    margin-bottom: 15px;
+}
+.card-body p{
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 19px;
+}
+button{
+    border-radius: 10px;
+    width: 136px;
+    height: 35px;
+    background-color: #C0E8FF;
+    border: none;
+    font-size: 16px;
+    font-weight: 400;
+    position: relative;
+    bottom: -13px;
+}
 
 .footer {
     border-bottom: none;
