@@ -1,4 +1,30 @@
 const input = require('sync-input');
+const COFFEE_TYPES = {
+    1: {
+        name: 'Espresso',
+        water: 250,
+        milk: 0,
+        beans: 16,
+        money: 4,
+        cups: 1,
+    },
+    2: {
+        name: 'Latte',
+        water: 350,
+        milk: 75,
+        beans: 20,
+        money: 7,
+        cups: 1,
+    },
+    3: {
+        name: 'Cappuccino',
+        water: 200,
+        milk: 100,
+        beans: 12,
+        money: 6,
+        cups: 1,
+    },
+};
 
 let machineState = {
     water: 400,
@@ -17,17 +43,17 @@ ${machineState.cups} disposable cups
 $${machineState.money} of money`);
 }
 
-function checkAvailability(waterNeeded, milkNeeded, beansNeeded, cupsNeeded) {
-    if (machineState.water < waterNeeded) {
+function checkAvailability(coffeeType) {
+    if (machineState.water < coffeeType.water) {
         console.log('Sorry, not enough water!');
         return false;
-    } else if (machineState.milk < milkNeeded) {
+    } else if (machineState.milk < coffeeType.milk) {
         console.log('Sorry, not enough milk!');
         return false;
-    } else if (machineState.beans < beansNeeded) {
+    } else if (machineState.beans < coffeeType.beans) {
         console.log('Sorry, not enough coffee beans!');
         return false;
-    } else if (machineState.cups < cupsNeeded) {
+    } else if (machineState.cups < coffeeType.cups) {
         console.log('Sorry, not enough coffee cups!');
         return false;
     } else {
@@ -36,27 +62,29 @@ function checkAvailability(waterNeeded, milkNeeded, beansNeeded, cupsNeeded) {
     }
 }
 
-function makeCoffee(waterNeeded, milkNeeded, beansNeeded, moneyEarned, cupsNeeded) {
-    if (checkAvailability(waterNeeded, milkNeeded, beansNeeded, cupsNeeded)){
-        machineState.water -= waterNeeded;
-        machineState.milk -= milkNeeded;
-        machineState.beans -= beansNeeded;
-        machineState.money += moneyEarned;
-        machineState.cups -= 1;
-        console.log('Coffee is ready!');
+function makeCoffee(coffeeType) {
+    if (checkAvailability(coffeeType)) {
+        machineState.water -= coffeeType.water;
+        machineState.milk -= coffeeType.milk;
+        machineState.beans -= coffeeType.beans;
+        machineState.money += coffeeType.money;
+        machineState.cups -= coffeeType.cups;
+        console.log(`${coffeeType.name} is ready!`);
     }
 }
 
-function makeEspresso() {
-    makeCoffee(250, 0, 16, 4, 1);
-}
+function buyCoffee() {
+    const typeOfCoffee = input('What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino, back - to main menu:');
+    const coffeeType = COFFEE_TYPES[typeOfCoffee];
 
-function makeLatte() {
-    makeCoffee(350, 75, 20, 7, 1);
-}
-
-function makeCappuccino() {
-    makeCoffee(200, 100, 12, 6, 1);
+    if (typeOfCoffee === 'back') {
+        return;
+    }
+    if (coffeeType) {
+        makeCoffee(coffeeType);
+    } else {
+        console.log('Invalid coffee type. Please choose 1, 2, 3, or back.');
+    }
 }
 
 function fillTheMachine() {
@@ -66,39 +94,31 @@ function fillTheMachine() {
     machineState.cups += Number(input('Write how many disposable cups you want to add: '));
 }
 
+function takeAction() {
+    console.log(`I gave you $${machineState.money}`);
+    machineState.money = 0;
+}
+
 while (true) {
     const choice = input('Write action (buy, fill, take, remaining, exit):');
 
-    if (choice === 'buy') {
-        const typeOfCoffee = input('What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino, back - to main menu:');
-
-        if (typeOfCoffee === 'back') {
-            continue;
-        }
-
-        switch (typeOfCoffee) {
-            case '1':
-                makeEspresso();
-                break;
-            case '2':
-                makeLatte();
-                break;
-            case '3':
-                makeCappuccino();
-                break;
-            default:
-                console.log('Invalid coffee type. Please choose 1, 2, 3, or back.');
-                break;
-        }
-
-    } else if (choice === 'fill') {
-        fillTheMachine();
-    } else if (choice === 'take') {
-        console.log(`I gave you $${machineState.money}`);
-        machineState.money = 0;
-    } else if (choice === 'remaining') {
-        showMachineState();
-    } else if (choice === 'exit') {
-        break;
+    switch (choice) {
+        case 'buy':
+            buyCoffee();
+            break;
+        case 'fill':
+            fillTheMachine();
+            break;
+        case 'take':
+            takeAction();
+            break;
+        case 'remaining':
+            showMachineState();
+            break;
+        case 'exit':
+            process.exit();
+        default:
+            console.log('Invalid action. Please choose buy, fill, take, remaining, or exit.');
     }
+
 }
