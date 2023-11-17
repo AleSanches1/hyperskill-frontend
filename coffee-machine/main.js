@@ -8,34 +8,55 @@ let machineState = {
     money: 550,
 }
 
-
 function showMachineState() {
     console.log(`The coffee machine has:
 ${machineState.water} ml of water
 ${machineState.milk} ml of milk
 ${machineState.beans} g of coffee beans
 ${machineState.cups} disposable cups
-$${machineState.money} of money`)
+$${machineState.money} of money`);
 }
-function makeCoffee(waterNeeded, milkNeeded, beansNeeded, moneyEarned) {
-    machineState.water -= waterNeeded;
-    machineState.milk -= milkNeeded;
-    machineState.beans -= beansNeeded;
-    machineState.money += moneyEarned;
-    machineState.cups -= 1;
 
+function checkAvailability(waterNeeded, milkNeeded, beansNeeded, cupsNeeded) {
+    if (machineState.water < waterNeeded) {
+        console.log('Sorry, not enough water!');
+        return false;
+    } else if (machineState.milk < milkNeeded) {
+        console.log('Sorry, not enough milk!');
+        return false;
+    } else if (machineState.beans < beansNeeded) {
+        console.log('Sorry, not enough coffee beans!');
+        return false;
+    } else if (machineState.cups < cupsNeeded) {
+        console.log('Sorry, not enough coffee cups!');
+        return false;
+    } else {
+        console.log('I have enough resources, making you a coffee!');
+        return true;
+    }
+}
+
+function makeCoffee(waterNeeded, milkNeeded, beansNeeded, moneyEarned, cupsNeeded) {
+    if (checkAvailability(waterNeeded, milkNeeded, beansNeeded, cupsNeeded)){
+        machineState.water -= waterNeeded;
+        machineState.milk -= milkNeeded;
+        machineState.beans -= beansNeeded;
+        machineState.money += moneyEarned;
+        machineState.cups -= 1;
+        console.log('Coffee is ready!');
+    }
 }
 
 function makeEspresso() {
-    makeCoffee(250, 0, 16, 4);
+    makeCoffee(250, 0, 16, 4, 1);
 }
 
 function makeLatte() {
-    makeCoffee(350, 75, 20, 7);
+    makeCoffee(350, 75, 20, 7, 1);
 }
 
-function makeCapuccino() {
-    makeCoffee(200, 100, 12, 6);
+function makeCappuccino() {
+    makeCoffee(200, 100, 12, 6, 1);
 }
 
 function fillTheMachine() {
@@ -46,11 +67,15 @@ function fillTheMachine() {
 }
 
 while (true) {
-    showMachineState();
+    const choice = input('Write action (buy, fill, take, remaining, exit):');
 
-    const choice = input('Write action (buy, fill, take):');
     if (choice === 'buy') {
-        const typeOfCoffee = input('What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino:');
+        const typeOfCoffee = input('What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino, back - to main menu:');
+
+        if (typeOfCoffee === 'back') {
+            continue;
+        }
+
         switch (typeOfCoffee) {
             case '1':
                 makeEspresso();
@@ -59,13 +84,21 @@ while (true) {
                 makeLatte();
                 break;
             case '3':
-                makeCapuccino();
+                makeCappuccino();
+                break;
+            default:
+                console.log('Invalid coffee type. Please choose 1, 2, 3, or back.');
                 break;
         }
+
     } else if (choice === 'fill') {
         fillTheMachine();
     } else if (choice === 'take') {
         console.log(`I gave you $${machineState.money}`);
         machineState.money = 0;
+    } else if (choice === 'remaining') {
+        showMachineState();
+    } else if (choice === 'exit') {
+        break;
     }
 }
