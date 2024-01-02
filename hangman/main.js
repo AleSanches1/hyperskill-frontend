@@ -3,11 +3,23 @@
 // You will need this in the following stages
 const input = require('sync-input')
 
-console.log(`H A N G M A N`);
-let userInput = input("Guess the word:");
+let listOfWords = ["python", "java", "swift", "javascript"];
+let getRandomWord = () => Math.floor(Math.random() * listOfWords.length);
+let selectedWord = listOfWords[getRandomWord()];
 
-if (userInput === "python"){
+function hideAPartOfWord(word) {
+    return word.slice(0, 3) + word.slice(3).replace(/./g, '-');
+}
+
+
+console.log(`H A N G M A N`);
+
+let userInput = input(`Guess the word: ${hideAPartOfWord(selectedWord)}`);
+
+
+
+if (userInput === selectedWord) {
     console.log("You survived!")
-}else{
+} else {
     console.log("You lost!")
-};
+}
