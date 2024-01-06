@@ -49,28 +49,47 @@ function collectString() {
     return result;
 }
 
-function isAlreadyExist(userInput) {
-    if (guessedWordLetters.indexOf(userInput) !== -1) {
-        console.log("No improvements.");
-        reduceAttempts();
-    }
-}
-
 function reduceAttempts() {
     --userAttempts;
-}
-
-function showMessage(userInput) {
-    let messagingCondition = currentWordLetters.includes(userInput);
-    if (!messagingCondition) {
-        console.log("That letter doesn't appear in the word.");
-        reduceAttempts();
-    }
 }
 
 function isWordGuessed() {
     return collectString() === currentWordLetters.join("");
 }
+
+// проверки и вывод сообщений
+
+function checkAmountOfLetters(userInput) {
+    let amount = userInput.length === 1;
+    if (!amount) {
+        console.log("Please, input a single letter.");
+    }
+    return amount;
+}
+
+function checkInputRegister(userInput) {
+    let regex = /[a-z]/;
+    let checkingRegister = regex.test(userInput);
+    if (!checkingRegister) {
+        console.log("Please, enter a lowercase letter from the English alphabet.")
+    }
+    return checkingRegister;
+}
+
+function isAlreadyExist(userInput) {
+    if (guessedWordLetters.indexOf(userInput) !== -1) {
+        console.log("You've already guessed this letter.");
+    }
+}
+
+function showMessageNotAppear(userInput) {
+    let messageCondition = currentWordLetters.includes(userInput);
+    if (!messageCondition) {
+        console.log("That letter doesn't appear in the word.");
+        reduceAttempts();
+    }
+}
+
 
 //Run
 function startGameSession() {
@@ -82,9 +101,15 @@ function startGameSession() {
     do {
         console.log("");
         let userInput = input(collectString() + prompt);
+        const isSingleLetter = checkAmountOfLetters(userInput);
+        const isLowerCaseLetter = checkInputRegister(userInput);
+
+        if (isSingleLetter && isLowerCaseLetter) {
+            showMessageNotAppear(userInput);
+        }
+
         isAlreadyExist(userInput);
         collectGuessedLetters(userInput);
-        showMessage(userInput);
     }
     while (userAttempts > 0 && !isWordGuessed());
 
@@ -92,8 +117,7 @@ function startGameSession() {
         console.log("You lost!");
     }
     if (isWordGuessed()) {
-        console.log("\n" + collectString());
-        console.log("You guessed the word!");
+        console.log("You guessed the word " + collectString() + "!");
         console.log("You survived!")
     }
 }
