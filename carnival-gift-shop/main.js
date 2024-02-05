@@ -1,8 +1,8 @@
 const input = require('sync-input');
-
+let menuChoice;
 
 const greeting = "WELCOME TO THE CARNIVAL GIFT SHOP!\nHello friend! Thank you for visiting the carnival!"
-let availableTickets = 100;
+let availableTickets = 0;
 
 function Item(name, price, id) {
     this.name = name;
@@ -35,7 +35,6 @@ function printGreetingMessage() {
     printGiftList();
 }
 
-
 function buyAGift() {
     let choice = input("Enter the number of the gift you want to get:");
     let giftName = giftList[choice - 1].name;
@@ -43,6 +42,7 @@ function buyAGift() {
     console.log(`Here you go, one ${giftName}!`);
     availableTickets -= gifPrice;
     console.log("Total tickets: " + availableTickets);
+    giftList.splice(choice - 1,1);
 }
 
 function addTickets (){
@@ -55,27 +55,38 @@ function checkTickets() {
 }
 
 
-
-printGreetingMessage();
-
 function chooseMenuItem(){
-let choice = input("\nWhat do you want to do?\n1-Buy a gift 2-Add tickets 3-Check tickets 4-Show gifts\n ");
-switch (choice) {
-    case "1":
-        buyAGift();
-        break
-    case "2":
-        addTickets();
-        break
-    case "3":
-        checkTickets();
-        break
-    case "4":
-        printGiftList();
-        break
-
+menuChoice = String(input("\nWhat do you want to do?\n1-Buy a gift 2-Add tickets 3-Check tickets 4-Show gifts 5-Exit the shop\n "));
+if (menuChoice === "1" || menuChoice === "2" || menuChoice === "3" || menuChoice === "4" || menuChoice === "5"){
+    switch (menuChoice) {
+        case "1":
+            buyAGift();
+            break
+        case "2":
+            addTickets();
+            break
+        case "3":
+            checkTickets();
+            break
+        case "4":
+            printGiftList();
+            break
+        case "5":
+            console.log("Have a nice day!");
+            return
+    }
 }
-console.log("Have a nice day!")
+else{
+    console.log("Put correct number");
+}
 }
 
-chooseMenuItem();
+
+function openTheShop() {
+    printGreetingMessage();
+    do{
+        chooseMenuItem();
+    } while (menuChoice !== "5");
+}
+
+openTheShop();
