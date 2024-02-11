@@ -9,6 +9,7 @@ const currencies = {
 const currenciesNames = Object.keys(currencies);
 
 let convertTo;
+let convertFrom;
 let amount;
 
 function printGreetingMessage(){
@@ -16,16 +17,23 @@ function printGreetingMessage(){
     for (const currency in currencies) {
         console.log(`1 USD equals ${currencies[currency]} ${currency}`);
     }
-    console.log("I can convert USD to these currencies: JPY, EUR, RUB, USD, GBP");
 }
 
-function checkCurrency() {
-    if (!currenciesNames.includes(convertTo)) {
+function checkCurrencyFrom() {
+    if (!currenciesNames.includes(convertFrom)) {
         console.log("Unknown currency");
         return false;
     }
     return true;
 }
+    function checkCurrencyTo(){
+        if (!currenciesNames.includes(convertTo)){
+            console.log("Unknown currency");
+            return false;
+        }
+        return true;
+    }
+
 function checkConvertedAmount(){
     if (amount < 1){
         console.log("The amount cannot be less than 1");
@@ -38,10 +46,13 @@ function checkConvertedAmount(){
     return true;
 }
 
-function collectCurrency(){
-    console.log("Type the currency you wish to convert: USD");
-    convertTo = (input("To:").toUpperCase());
+function collectCurrencyFrom(){
+    console.log("What do you want to convert?");
+    convertFrom = input("From: ").toUpperCase();
 
+}
+function collectCurrencyTo() {
+    convertTo = input("To:").toUpperCase();
 }
 function collectAmount(){
     amount = Number(input("Amount:"));
@@ -50,18 +61,24 @@ function collectAmount(){
 
 
 function countAndPrintResult() {
-    let currentCurrencyIndex = currenciesNames.indexOf(convertTo);
-    let currentCurrency = currenciesNames[currentCurrencyIndex];
-    let result =  currencies.USD * amount * currencies[currentCurrency];
-    console.log("Result: " + amount + " USD equals " + result.toFixed(4) + " " + currentCurrency)
+    let fromCurrencyIndex = currenciesNames.indexOf(convertFrom);
+    let fromCurrency = currenciesNames[fromCurrencyIndex];
+    let neededCurrencyIndex = currenciesNames.indexOf(convertTo);
+    let neededCurrency = currenciesNames[neededCurrencyIndex];
+    let result = (amount / currencies[fromCurrency]) * currencies[neededCurrency];
+    console.log("Result: " + amount + " " + fromCurrency + " equals " + result.toFixed(4) + " " + neededCurrency)
 }
 function collectUserdata() {
-    collectCurrency();
-    if(checkCurrency()){
-        collectAmount();
-        if(checkConvertedAmount()){
-            countAndPrintResult();
+    collectCurrencyFrom();
+    if(checkCurrencyFrom()){
+        collectCurrencyTo();
+        if(checkCurrencyTo()){
+            collectAmount();
+            if(checkConvertedAmount()){
+                countAndPrintResult();
+            }
         }
+
     }
 }
 
