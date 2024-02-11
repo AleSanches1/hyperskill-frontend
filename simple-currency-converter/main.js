@@ -26,13 +26,13 @@ function checkCurrencyFrom() {
     }
     return true;
 }
-    function checkCurrencyTo(){
-        if (!currenciesNames.includes(convertTo)){
-            console.log("Unknown currency");
-            return false;
-        }
-        return true;
+function checkCurrencyTo(){
+    if (!currenciesNames.includes(convertTo)){
+        console.log("Unknown currency");
+        return false;
     }
+    return true;
+}
 
 function checkConvertedAmount(){
     if (amount < 1){
@@ -68,19 +68,39 @@ function countAndPrintResult() {
     let result = (amount / currencies[fromCurrency]) * currencies[neededCurrency];
     console.log("Result: " + amount + " " + fromCurrency + " equals " + result.toFixed(4) + " " + neededCurrency)
 }
-function collectUserdata() {
-    collectCurrencyFrom();
-    if(checkCurrencyFrom()){
-        collectCurrencyTo();
-        if(checkCurrencyTo()){
-            collectAmount();
-            if(checkConvertedAmount()){
-                countAndPrintResult();
-            }
+// function checkingInput(menuChoice){
+//     if (menuChoice < 1 || menuChoice > 2 || menuChoice == NaN){
+//         console.log()
+//     }
+// }
+
+function main() {
+    printGreetingMessage();
+    let menuChoice;
+    do{
+        menuChoice = Number(input("What do you want to do?\n1-Convert currencies 2-Exit program\n"));
+        switch (menuChoice) {
+            case 1:
+                collectCurrencyFrom();
+                if(checkCurrencyFrom()){
+                    collectCurrencyTo();
+                    if(checkCurrencyTo()){
+                        collectAmount();
+                        if(checkConvertedAmount()){
+                            countAndPrintResult();
+                        }
+                    }
+                }
+                break
+            case 2:
+                console.log("Have a nice day!\n")
+                return
+            default:
+                console.log("Unknown input");
         }
 
-    }
+    }while (menuChoice !== 2);
+
 }
 
-printGreetingMessage();
-collectUserdata();
+main();
