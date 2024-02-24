@@ -24,6 +24,14 @@ const COFFEE_TYPES = {
         money: 6,
         cups: 1,
     },
+    4: {
+        name: 'Americano',
+        water: 150,
+        milk: 0,
+        beans: 18,
+        money: 5,
+        cups: 1,
+    },
 };
 
 let machineState = {
@@ -62,29 +70,48 @@ function checkAvailability(coffeeType) {
     }
 }
 
-function makeCoffee(coffeeType) {
+function makeCoffee(coffeeType, typeOfCoffee) {
     if (checkAvailability(coffeeType)) {
         machineState.water -= coffeeType.water;
         machineState.milk -= coffeeType.milk;
         machineState.beans -= coffeeType.beans;
         machineState.money += coffeeType.money;
         machineState.cups -= coffeeType.cups;
-        console.log(`${coffeeType.name} is ready!`);
+
+        // Check if the coffee type is special before printing the special message
+        if (typeOfCoffee === 'random') {
+            console.log(`${coffeeType.name} is ready! Your special price is ${coffeeType.money}!`);
+        } else {
+            console.log(`${coffeeType.name} is ready!`);
+        }
     }
 }
 
 function buyCoffee() {
-    const typeOfCoffee = input('What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino, back - to main menu:');
+    const typeOfCoffee = input('What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino, 4 - americano, random - try random coffee with special price, back - to main menu:');
     const coffeeType = COFFEE_TYPES[typeOfCoffee];
 
     if (typeOfCoffee === 'back') {
         return;
     }
-    if (coffeeType) {
-        makeCoffee(coffeeType);
+    if (typeOfCoffee === 'random') {
+        const specialOffer = getSpecialOffer();
+        makeCoffee(specialOffer, typeOfCoffee);
+    } else if (coffeeType) {
+        makeCoffee(coffeeType, typeOfCoffee);
     } else {
-        console.log('Invalid coffee type. Please choose 1, 2, 3, or back.');
+        console.log('Invalid coffee type. Please choose 1, 2, 3, special, or back.');
     }
+}
+
+
+
+function getSpecialOffer() {
+    const randomCoffeeIndex = Math.floor(Math.random() * Object.values(COFFEE_TYPES).length);
+    const randomCoffee = Object.values(COFFEE_TYPES)[randomCoffeeIndex];
+
+    const updatedCoffee = { ...randomCoffee, money: randomCoffee.money - 2 };
+    return updatedCoffee;
 }
 
 function fillTheMachine() {
