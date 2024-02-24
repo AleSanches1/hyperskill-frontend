@@ -5,11 +5,17 @@ const input = require('sync-input')
 
 // Независимые от текущей игры
 let listOfWords = ["python", "java", "swift", "javascript"];
+const menuItems = {PLAY: "play", RESULTS: "results", EXIT: "exit"}
 
 // Текущая игра:
+let menuItem;
 let currentWordLetters;
 let guessedWordLetters;
+let inputLetters;
 let userAttempts = 8;
+let winnings = 0;
+let losses = 0;
+
 
 function prepareLetterArray() {
     let randomize = () => Math.floor(Math.random() * listOfWords.length);
@@ -21,6 +27,15 @@ function makeGuessingLettersArray() {
     guessedWordLetters = new Array(currentWordLetters.length);
 }
 
+function makeArrayWithInputLetters() {
+    inputLetters = [];
+}
+
+function collectInputLetters(userInput) {
+    inputLetters.push(userInput);
+    return inputLetters;
+}
+
 function collectGuessedLetters(userInput) {
     let guessedIndices = [];
 
@@ -29,18 +44,20 @@ function collectGuessedLetters(userInput) {
             guessedIndices.push(i);
         }
     }
-    guessedIndices.forEach(index => {
-        guessedWordLetters.splice(index, 1, userInput);
-    });
+
+    if (guessedIndices.length > 0) {
+        for (let index of guessedIndices) {
+            guessedWordLetters[index] = userInput;
+        }
+    }
 
     return guessedWordLetters;
 }
 
-
 function collectString() {
     let result = '';
     for (let i = 0; i < guessedWordLetters.length; i++) {
-        if (guessedWordLetters[i] === undefined) {
+        if (guessedWordLetters[i] === undefined || guessedWordLetters[i] === null) {
             result += "-";
         } else {
             result += guessedWordLetters[i];
@@ -49,9 +66,6 @@ function collectString() {
     return result;
 }
 
-function reduceAttempts() {
-    --userAttempts;
-}
 
 function isWordGuessed() {
     return collectString() === currentWordLetters.join("");
@@ -77,27 +91,45 @@ function checkInputRegister(userInput) {
 }
 
 function isAlreadyExist(userInput) {
-    if (guessedWordLetters.indexOf(userInput) !== -1) {
+    if (guessedWordLetters.indexOf(userInput) !== -1 || inputLetters.slice(0, -1).includes(userInput)) {
         console.log("You've already guessed this letter.");
+        return true;
     }
+    return false;
 }
+
 
 function showMessageNotAppear(userInput) {
     let messageCondition = currentWordLetters.includes(userInput);
-    if (!messageCondition) {
+    if (!messageCondition && !inputLetters.includes(userInput)) {
         console.log("That letter doesn't appear in the word.");
-        reduceAttempts();
+        userAttempts -= 1;
+    }
+}
+
+function chooseAction() {
+    return input('\nType "play" to play the game, "results" to show the scoreboard, and "exit" to quit:');
+}
+
+function showGameResult() {
+    if (userAttempts === 0) {
+        console.log("You lost!");
+        losses += 1;
+    }
+    if (isWordGuessed()) {
+        console.log("You guessed the word " + collectString() + "!");
+        console.log("You survived!");
+        winnings += 1;
     }
 }
 
 
-//Run
-function startGameSession() {
-    console.log("H A N G M A N");
-
+function playTheGame() {
     const prompt = "\nInput a letter:"
     prepareLetterArray();
     makeGuessingLettersArray();
+    makeArrayWithInputLetters();
+
     do {
         console.log("");
         let userInput = input(collectString() + prompt);
@@ -105,21 +137,40 @@ function startGameSession() {
         const isLowerCaseLetter = checkInputRegister(userInput);
 
         if (isSingleLetter && isLowerCaseLetter) {
+            if (isAlreadyExist(userInput)) {
+                continue;
+            }
             showMessageNotAppear(userInput);
+            collectInputLetters(userInput);
+            isAlreadyExist(userInput);
+            collectGuessedLetters(userInput);
+        }
+    } while (userAttempts > 0 && !isWordGuessed());
+
+    showGameResult();
+}
+
+function showResults() {
+    console.log("You won: " + winnings + " times.");
+    console.log("You lost: " + losses + " times.")
+}
+
+function startGameSession() {
+    console.log("H A N G M A N");
+    do {
+        const menuItem = chooseAction();
+        switch (menuItem) {
+            case menuItems.PLAY:
+                playTheGame();
+                break;
+            case menuItems.RESULTS:
+                showResults();
+                break;
+            case menuItems.EXIT:
+                return;
         }
 
-        isAlreadyExist(userInput);
-        collectGuessedLetters(userInput);
-    }
-    while (userAttempts > 0 && !isWordGuessed());
-
-    if (userAttempts === 0) {
-        console.log("You lost!");
-    }
-    if (isWordGuessed()) {
-        console.log("You guessed the word " + collectString() + "!");
-        console.log("You survived!")
-    }
+    } while (menuItem !== menuItems.EXIT);
 }
 
 startGameSession();
