@@ -50,4 +50,3 @@ document.addEventListener("DOMContentLoaded", async function () {
         // Error handling is already done in fetchUserInfo function
     }
 });
-
