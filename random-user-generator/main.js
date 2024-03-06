@@ -29,12 +29,12 @@ function displayUserInfo(userInfo) {
     const nameElement = createAndAppendElement(divElement, "h2", `${name.first} ${name.last}`, "name");
 
     // info
-    createAndAppendElement(divElement, "p", `Email:`, "email");
-    createAndAppendElement(divElement, "p", `Password:`, "password");
-    createAndAppendElement(divElement, "p", `Gender:`, "gender");
-    createAndAppendElement(divElement, "p", `Phone: `, "phone");
-    createAndAppendElement(divElement, "p", `Location:`, "location");
-    createAndAppendElement(divElement, "p", `Birthday:`, "birthday");
+    createAndAppendElement(divElement, "p", `Email: ${email}`, "email");
+    createAndAppendElement(divElement, "p", `Password: ${login.password}`, "password");
+    createAndAppendElement(divElement, "p", `Gender: ${gender}`, "gender");
+    createAndAppendElement(divElement, "p", `Phone: ${phone}`, "phone");
+    createAndAppendElement(divElement, "p", `Location: ${location.city}, ${location.country}`, "location");
+    createAndAppendElement(divElement, "p", `Birthday: ${registered.date.slice(0, 10).replace(/-/g, "/")}`, "birthday");
 
     const photoElement = createAndAppendElement(divElement, "img", "", "photo");
     photoElement.src = picture.large;
@@ -42,11 +42,16 @@ function displayUserInfo(userInfo) {
 }
 
 
-document.addEventListener("DOMContentLoaded", async function () {
+async function handleUserInfo() {
     try {
         const userInfo = await fetchUserInfo(apiUrl);
         displayUserInfo(userInfo);
     } catch (error) {
         // Error handling is already done in fetchUserInfo function
     }
-});
+}
+
+document.addEventListener("DOMContentLoaded", handleUserInfo);
+
+const button = document.getElementById("get-user-button");
+button.addEventListener("click", handleUserInfo);
