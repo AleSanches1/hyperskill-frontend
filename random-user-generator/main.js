@@ -22,20 +22,29 @@ const createAndAppendElement = (parent, tagName, text, className) => {
     parent.appendChild(element);
     return element;
 };
-function createDiv(constName,className,parent){
+
+function createDiv(constName, className, parent) {
     constName = document.createElement("div");
     constName.classList.add(className);
     parent.after(constName);
 }
+
 createDiv('usersDiv', "users", btnSaveUsers);
+const savedUsersDiv = document.querySelector('.saved-users');
+
 function displayUserInfo(userInfo, isSaved = false) {
 
     const {name, email, login, gender, phone, location, registered, picture} = userInfo;
     console.log(userInfo)
-const usersDiv = document.querySelector('.users');
-    const divElement = createAndAppendElement(usersDiv, "div", "", "user");
+    const usersDiv = document.querySelector('.users');
 
+    const divElement = createAndAppendElement(isSaved ? savedUsersDiv : usersDiv, "div", "", isSaved ? "saved user" : "user");
+    const photoElement = createAndAppendElement(divElement, "img", "", "photo");
+    photoElement.src = picture.large;
+    photoElement.alt = "photo";
     // name
+    // const nameElement = createAndAppendElement(divElement, "h2", `${name.first} ${name.last}`, "name");
+
     createAndAppendElement(divElement, "h2", `${name.first} ${name.last}`, "name");
 
     // info
@@ -46,9 +55,7 @@ const usersDiv = document.querySelector('.users');
     createAndAppendElement(divElement, "p", `Location: ${location.city}, ${location.country}`, "location");
     createAndAppendElement(divElement, "p", `Birthday: ${registered.date.slice(0, 10).replace(/-/g, "/")}`, "birthday");
 
-    const photoElement = createAndAppendElement(divElement, "img", "", "photo");
-    photoElement.src = picture.large;
-    photoElement.alt = "photo";
+
 
 }
 
@@ -67,45 +74,50 @@ async function handleUserInfo() {
 }
 
 
-
-
 // document.addEventListener("DOMContentLoaded", handleUserInfo);
-document.addEventListener("DOMContentLoaded", getUsersFromLocalStorage);
+// document.addEventListener("DOMContentLoaded", getUsersFromLocalStorage);
+//
+//
+// async function getUsersFromLocalStorage() {
+//     try {
+//         const savedUsers = JSON.parse(sessionStorage.getItem('fetchedArray'));
+//         // createAndAppendElement(document.body, "div", "", "saved");
+//         for (let i = 0; i < savedUsers.length; i++) {
+//             let user = savedUsers[i];
+//             console.log(user);
+//         }
 
-const savedUsersDiv = document.querySelector('.saved-users')
+document.addEventListener("DOMContentLoaded", async function() {
+    await getUsersFromLocalStorage();
+    if (sessionStorage.getItem('fetchedArray')) {
+        showHeading("savedUsersHeading", ".saved-users__heading", savedUsersDiv);
+    }
+});
 
 async function getUsersFromLocalStorage() {
     try {
-        const savedUsers = JSON.parse(sessionStorage.getItem('fetchedArray'));
-        // createAndAppendElement(document.body, "div", "", "saved");
-        for (let i = 0; i < savedUsers.length; i++) {
-            let user = savedUsers[i];
-            console.log(user);
-        }
+        const savedUsers = JSON.parse(sessionStorage.getItem('fetchedArray')) || [];
         savedUsers.forEach(user => {
-            // const savedUser = createAndAppendElement(savedUsersDiv, "div", "", "saved");
-            displayUserInfo(user);
+            displayUserInfo(user, true); // Display each saved user
         });
-        showHeading(".saved-users", ".saved"); // Показываем заголовок при наличии сохраненных пользователей
+        if (savedUsers.length > 0) {
+            // createDiv("savedUsers")
+            showHeading("savedUsersHeading", ".saved-users__heading", savedUsersDiv);
+        }
     } catch (error) {
         console.error("Error fetching user info:", error);
         throw error;
     }
 }
+
 const btnGetUsers = document.getElementById("get-user-button");
 btnGetUsers.addEventListener("click", handleUserInfo);
 
 
-function showHeading(heading,selector, parent) {
-   heading = document.querySelector(selector);
-
-    const savedUsersDiv = document.querySelector(parent);
-    // if (localStorage.getItem('fetchedArray') !== null) {
-    //     savedUsersHeading.classList.remove("hidden");
-    //     savedUsersDiv.prepend(savedUsersHeading);
-    // } else {
-    //     savedUsersHeading.classList.add("hidden");
-    // }
+function showHeading(constName, selector, parent) {
+    constName = document.querySelector(selector);
+    constName.classList.remove('hidden');
+    parent.prepend(constName);
 }
 
 // btnSaveUsers.addEventListener("click", function () {
@@ -123,18 +135,11 @@ function showHeading(heading,selector, parent) {
 //     }
 //     getUsersFromLocalStorage().then(r => displayUserInfo());
 // })
-btnSaveUsers.addEventListener("click", function () {
+btnSaveUsers.addEventListener("click", async function () {
     sessionStorage.setItem('fetchedArray', JSON.stringify(fetchedArray));
-    // showHeading(".saved-users", ".saved");
-    getUsersFromLocalStorage().then(r => displayUserInfo());
+    await getUsersFromLocalStorage();
+    // getUsersFromLocalStorage().then(r => displayUserInfo());
 })
-// const btnClear = document.getElementById('clear');
-// btnClear.addEventListener('click', function () {
-//     document.querySelector(".saved-users").classList.add('hidden');
-//     localStorage.clear();
-// document.querySelector('div').remove();
-// })
 
-//1)получаем данные с апи, записываем в массив
-//2) читаем массив и выводим в хтмл
-//3) сохраняем - очищаем локальное хранилище, читаем массив и записываем в хранилище
+
+//исправить добавление сохраненных юзеров в нужный див (saved user), сейчас они сохраняются вне его
