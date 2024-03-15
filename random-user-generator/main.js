@@ -2,6 +2,20 @@ const apiUrl = "https://randomuser.me/api/";
 const fetchedArray = [];
 const btnSaveUsers = document.getElementById("save-users-button");
 
+// creating elements
+const createAndAppendElement = (parent, tagName, text, className) => {
+    const element = document.createElement(tagName);
+    if (text) element.textContent = text;
+    if (className) element.className = className;
+    parent.appendChild(element);
+    return element;
+};
+function createDiv(constName, className, parent) {
+    constName = document.createElement("div");
+    constName.classList.add(className);
+    parent.after(constName);
+}
+//fetching any info about users from API
 async function fetchUserInfo(url) {
     try {
         const response = await fetch(url);
@@ -14,31 +28,32 @@ async function fetchUserInfo(url) {
     }
 }
 
+// getting info about random users
 
-const createAndAppendElement = (parent, tagName, text, className) => {
-    const element = document.createElement(tagName);
-    if (text) element.textContent = text;
-    if (className) element.className = className;
-    parent.appendChild(element);
-    return element;
-};
-
-function createDiv(constName, className, parent) {
-    constName = document.createElement("div");
-    constName.classList.add(className);
-    parent.after(constName);
+async function handleUserInfo() {
+    try {
+        const userInfo = await fetchUserInfo(apiUrl);
+        fetchedArray.push(userInfo);
+        displayUserInfo(userInfo);
+        return userInfo; // Возвращаем userInfo, чтобы его можно было использовать при сохранении
+    } catch (error) {
+        console.error("Error fetching user info:", error);
+        throw error;
+    }
 }
 
+//creating a container for keeping users
 createDiv('usersDiv', "users", btnSaveUsers);
 const savedUsersDiv = document.querySelector('.save-users');
 
+//displaying the received information about users
 function displayUserInfo(userInfo, isSaved = false) {
 
     const {name, email, login, gender, phone, location, registered, picture} = userInfo;
     console.log(userInfo)
     const usersDiv = document.querySelector('.users');
+
     const divElement = createAndAppendElement(isSaved ? savedUsersDiv : usersDiv, "div", "", isSaved ? "saved" : "user");
-    //photo
     const photoElement = createAndAppendElement(divElement, "img", "", "photo");
     photoElement.src = picture.large;
     photoElement.alt = "photo";
@@ -54,29 +69,14 @@ function displayUserInfo(userInfo, isSaved = false) {
     createAndAppendElement(divElement, "p", `Birthday: ${registered.date.slice(0, 10).replace(/-/g, "/")}`, "birthday");
 }
 
-async function handleUserInfo() {
-    try {
-        const userInfo = await fetchUserInfo(apiUrl);
-        fetchedArray.push(userInfo);
-        displayUserInfo(userInfo);
-        return userInfo; // Возвращаем userInfo, чтобы его можно было использовать при сохранении
-    } catch (error) {
-        console.error("Error fetching user info:", error);
-        throw error;
-    }
-}
-function showHeading() {
+//displaying info about saved users after page loaded
+document.addEventListener("DOMContentLoaded", async function () {
+    await getUsersFromLocalStorage();
     const heading = document.querySelector("h3");
     savedUsersDiv.before(heading);
     if (sessionStorage.getItem('fetchedArray')) {
         heading.classList.remove("hidden");
     }
-}
-
-document.addEventListener("DOMContentLoaded", async function () {
-
-    await getUsersFromLocalStorage();
-    showHeading();
 });
 
 async function getUsersFromLocalStorage() {
@@ -91,16 +91,17 @@ async function getUsersFromLocalStorage() {
     }
 }
 
+// "Get users" button
 const btnGetUsers = document.getElementById("get-user-button");
 btnGetUsers.addEventListener("click", handleUserInfo);
 
-
+//"Save Users" button
 btnSaveUsers.addEventListener("click", async function () {
-    showHeading();
+    const heading = document.querySelector("h3");
+    savedUsersDiv.before(heading);
+    heading.classList.remove("hidden");
     savedUsersDiv.innerHTML = '';
     sessionStorage.setItem('fetchedArray', JSON.stringify(fetchedArray));
     await getUsersFromLocalStorage();
 
 })
-
-
