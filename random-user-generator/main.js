@@ -44,7 +44,7 @@ async function handleUserInfo() {
 
 //creating a container for keeping users
 createDiv('usersDiv', "users", btnSaveUsers);
-const savedUsersDiv = document.querySelector('.save-users');
+const savedUsersDiv = document.querySelector('.saved-users');
 
 //displaying the received information about users
 function displayUserInfo(userInfo, isSaved = false) {
