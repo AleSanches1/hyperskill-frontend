@@ -43,8 +43,7 @@ async function handleUserInfo() {
 }
 
 //creating a container for keeping users
-createDiv('usersDiv', "users", btnSaveUsers);
-const savedUsersDiv = document.querySelector('.save-users');
+const savedUsersDiv = document.querySelector('.saved-users');
 
 //displaying the received information about users
 function displayUserInfo(userInfo, isSaved = false) {
@@ -53,7 +52,7 @@ function displayUserInfo(userInfo, isSaved = false) {
     console.log(userInfo)
     const usersDiv = document.querySelector('.users');
 
-    const divElement = createAndAppendElement(isSaved ? savedUsersDiv : usersDiv, "div", "", isSaved ? "saved" : "user");
+    const divElement = createAndAppendElement(isSaved ? savedUsersDiv : usersDiv, "div", "", isSaved ? "saved user" : "user");
     const photoElement = createAndAppendElement(divElement, "img", "", "photo");
     photoElement.src = picture.large;
     photoElement.alt = "photo";
@@ -103,5 +102,4 @@ btnSaveUsers.addEventListener("click", async function () {
     savedUsersDiv.innerHTML = '';
     sessionStorage.setItem('fetchedArray', JSON.stringify(fetchedArray));
     await getUsersFromLocalStorage();
-
 })
