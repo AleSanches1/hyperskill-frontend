@@ -4,8 +4,8 @@ function getEnteredData() {
     return textArea.value;
 }
 
-function splittingSentence(separator) {
-    const wordArray = getEnteredData().split(separator);
+function makeSentence(separator) {
+    const wordArray = getEnteredData().toLowerCase().split(separator);
     const arr = [];
     wordArray.forEach(function (value) {
         const words = value.charAt(0).toUpperCase() + value.slice(1);
@@ -27,10 +27,10 @@ lowerBtn.addEventListener("click", function () {
 
 const properBtn = document.querySelector("#proper-case");
 properBtn.addEventListener("click", function () {
-    splittingSentence(" ");
+    makeSentence(" ");
 })
 const sentenceBtn = document.querySelector("#sentence-case");
 sentenceBtn.addEventListener("click", function () {
-    splittingSentence(". ")
+    makeSentence(". ")
 })
 
