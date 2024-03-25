@@ -153,6 +153,26 @@ Project link to Hyperskill: <a href="https://hyperskill.org/projects/220?track=3
 </details>
                 </p>
             </ul>
+            <h4>⬛ Project: 
+                <a  
+                    href="https://github.com/ale-sanches/hyperskill-frontend/tree/release/case-converter/case-converter">Case Converter
+                    </a>
+            </h4>
+            <ul>
+                <p>
+                    <img src="https://img.shields.io/badge/basics-informational?style=flat&color=white" alt=""/>
+                    <img src="https://img.shields.io/badge/js-informational?style=flat&color=white" alt=""/>
+                    <img src="https://img.shields.io/badge/functions-informational?style=flat&color=white" alt=""/>
+                    <img src="https://img.shields.io/badge/events-informational?style=flat&color=white" alt=""/>
+                    <br>
+                    A program that converts a provided text to needed case: upper, lower, sentense or proper. <br>      
+                    Project link to Hyperskill: <a href="https://hyperskill.org/projects/193">click</a> <br>
+                      <details>
+                    <summary><b>Preview</b></summary>
+<img src="readme-src/case-converter.gif" alt="project preview" width="500"/>
+</details>
+                </p>
+            </ul>
         </ul>
     </div>
 </body>
