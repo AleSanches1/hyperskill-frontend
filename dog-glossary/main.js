@@ -1,26 +1,16 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const showDogBtn = document.getElementById("button-random-dog");
+window.addEventListener("DOMContentLoaded", function (evt) {
 
-    async function fetchFunction() {
-        const response = await fetch("https://dog.ceo/api/breeds/image/random");
+    const showRandomDog = document.querySelector("#content");
+    const button = document.querySelector("#button-random-dog");
+
+    button.addEventListener("click", async (evt)=>{
+        const imageURL = await getRandomImage();
+        showRandomDog.innerHTML = `<img src = "${imageURL}" alt = "random dog" />`;
+    });
+
+    const getRandomImage = async () => {
+        const response =await fetch ("https://dog.ceo/api/breeds/image/random");
         const data = await response.json();
         return data.message;
     }
-
-    async function checkImage() {
-        const container = document.getElementById("content");
-        if (document.querySelector("img") !== null) {
-            container.removeChild(container.firstChild);
-        }
-    }
-
-    showDogBtn.addEventListener("click", async function (evt) {
-        evt.preventDefault();
-        const randomPicUrl = await fetchFunction();
-        const contentDiv = document.getElementById("content");
-        const randomPic = document.createElement("img");
-        randomPic.src = randomPicUrl;
-        await checkImage();
-        contentDiv.prepend(randomPic);
-    });
-});
+})
