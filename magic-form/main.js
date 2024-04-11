@@ -1,6 +1,8 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function (evt) {
+    evt.preventDefault();
     const btn = document.querySelector("#submit-button");
     const form = document.querySelector("#form");
+    let users = JSON.parse(localStorage.getItem('users')) || [];
 
     form.addEventListener("input", function (evt) {
         evt.preventDefault();
@@ -11,24 +13,36 @@ document.addEventListener("DOMContentLoaded", function () {
     const savedData = JSON.parse(localStorage.getItem('formData'));
 
     function fillInputs() {
-        const inputs = {
-            "first-name": "#first-name",
-            "last-name": "#last-name",
-            "email": "#email",
-            "phone": "#phone",
-            "company": "#company",
-            "address": "#address"
-        };
-        for (const key in inputs) {
-            if (inputs.hasOwnProperty(key)) {
-                const element = inputs[key]; //извлекаем значение свойства объекта inputs и сохраняем его в переменную element. Значение element представляет собой селектор элемента формы (например, "#first-name").
-                const input = document.querySelector(element); // используем document.querySelector с полученным селектором, чтобы найти соответствующий элемент формы. Найденный элемент сохраняется в переменной input.
-                input.value = savedData[key] || ""; //устанавливаем значение поля формы (input.value) равным значению, сохраненному в объекте savedData под ключом key. Если такого ключа нет в savedData, или если его значение равно null или undefined, то устанавливаем пустую строку в качестве значения поля формы.
-            }
-        }
+        const inputs = document.querySelectorAll('input[name]');
+        inputs.forEach(input => {
+            const name = input.getAttribute('name');
+            input.value = savedData[name] || "";
+        });
     }
 
     fillInputs();
 
+
+    function collectData() {
+        const formData = Object.fromEntries(new FormData(form));
+        users.push(formData);
+        localStorage.setItem('users', JSON.stringify(users));
+        console.log(users)
+        return users;
+    }
+
+
+    function clearInputs() {
+        const inputs = document.querySelectorAll('input[name]');
+        inputs.forEach(input => {
+            input.value = "";
+        });
+    }
+
+    form.addEventListener("submit", function (evt) {
+        evt.preventDefault();
+        collectData();
+        clearInputs();
+    })
 
 })
