@@ -1,0 +1,60 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+body {
+    background: #e8f4fc;
+}
+
+.content {
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    padding: 30px;
+    width: 300px;
+    text-align: center;
+    background: #fff;
+    border-radius: 16px;
+    border: none;
+    box-shadow: 7px 7px 26px -11px rgba(0, 0, 0, 0.75);
+}
+.add-part{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+.input-task{
+    border: none;
+    border-bottom: 3px solid #96c6f1;
+    width: 200px;
+}
+.add-task-button{
+    background: #96c6f1;
+    border: none;
+    padding: 5px;
+    border-radius: 6px;
+}
+.items{
+    list-style: none;
+    text-align: left;
+}
+.list-item{
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    justify-content: space-between;
+}
+.checkbox{
+    border-radius: 6px;
+}
+.task{
+    margin: 10px;
+    font-size: 20px;
+}
+.delete-btn{
+    font-size: 10px;
+    color: black;
+    border: none;
+}
