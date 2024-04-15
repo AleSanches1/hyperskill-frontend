@@ -1,7 +1,8 @@
-*{
+* {
     padding: 0;
     margin: 0;
 }
+
 body {
     background: #e8f4fc;
 }
@@ -20,40 +21,49 @@ body {
     border: none;
     box-shadow: 7px 7px 26px -11px rgba(0, 0, 0, 0.75);
 }
-.add-part{
+
+.add-part {
     display: flex;
     justify-content: space-between;
     margin-bottom: 15px;
 }
-.input-task{
+
+.input-task {
     border: none;
+    outline: none;
     border-bottom: 3px solid #96c6f1;
     width: 200px;
 }
-.add-task-button{
+
+.add-task-button {
     background: #96c6f1;
     border: none;
     padding: 5px;
     border-radius: 6px;
 }
-.items{
+
+.items {
     list-style: none;
     text-align: left;
 }
-.list-item{
+
+.list-item {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
     justify-content: space-between;
 }
-.checkbox{
+
+.checkbox {
     border-radius: 6px;
 }
-.task{
+
+.task {
     margin: 10px;
     font-size: 20px;
 }
-.delete-btn{
+
+.delete-btn {
     font-size: 10px;
     color: black;
     border: none;
