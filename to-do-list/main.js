@@ -1,7 +1,7 @@
 const inputField = document.querySelector("#input-task");
 const addTaskBtn = document.querySelector("#add-task-button");
 const taskList = document.querySelector("#task-list")
-
+const checkboxes = document.querySelectorAll(".checkbox")
 
 addTaskBtn.addEventListener("click", function () {
     const newTask = inputField.value.trim();
@@ -10,6 +10,15 @@ addTaskBtn.addEventListener("click", function () {
         inputField.value = "";
     }
 });
+
+checkboxes.forEach(function (checkbox) {
+    checkbox.addEventListener("click", function () {
+        const parentDiv = checkbox.parentElement;
+        const taskSpan = parentDiv.querySelector(".task");
+        taskSpan.classList.toggle("checked", checkbox.checked);
+    });
+});
+
 
 function createLiItem(task) {
     const listItem = document.createElement("li");
@@ -23,10 +32,9 @@ function createLiItem(task) {
         <button class="delete-btn">&times;</button>
     `;
 
-    listItem.querySelector('.delete-btn').addEventListener("click", function() {
+    listItem.querySelector('.delete-btn').addEventListener("click", function () {
         listItem.remove();
     });
 
     taskList.appendChild(listItem);
 }
-
