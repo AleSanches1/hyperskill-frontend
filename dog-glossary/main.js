@@ -36,9 +36,4 @@ window.addEventListener("DOMContentLoaded", function (evt) {
         const data = await response.json();
         return data.message;
     }
-
-
-
-
 })
-
