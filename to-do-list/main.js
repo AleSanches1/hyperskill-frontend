@@ -64,4 +64,3 @@ function createTask(task) {
 window.onload = function () {
     displayItems();
 }
-
