@@ -15,20 +15,23 @@ window.addEventListener("DOMContentLoaded", function (evt) {
             if (response) {
                 content.innerHTML = `<img src = "${response}" alt = "dog" />`
             } else {
-                content.innerHTML = `<p>Breed not found!</p>`
+                content.innerHTML = `<p>Breed not found!</p>`;
+                return;
             }
 
         }
         if (evt.target === showSubBreedBtn) {
-            // const response = await getInfoFromApi("images/random");
-            // if (!response) {
-            //     content.innerHTML = `<p>Breed not found!</p>`
-            // }
+            const response = await getInfoFromApi("images/random");
+            if (!response) {
+                content.innerHTML = `<p>Breed not found!</p>`;
+                return; // Выходим из обработчика после отображения сообщения
+            }
             const breeds = await showSubBreedList();
             console.log(breeds);
-            if (!breeds) {
+            if (!breeds || breeds.length === 0) {
                 content.innerHTML = `<p>No sub-breeds found!</p>`
             }
+
         }
     })
 
@@ -38,15 +41,6 @@ window.addEventListener("DOMContentLoaded", function (evt) {
         return data.message;
     }
 
-    // async function showBreed() {
-    //     const breed = document.querySelector("#input-breed").value.toLowerCase();
-    //     const response = await fetch(`https://dog.ceo/api/breed/${breed}/images/random`);
-    //     if (!response.ok) {
-    //         return false;
-    //     }
-    //     const data = await response.json();
-    //     return data.message;
-    // }
 
     async function showSubBreedList() {
 
