@@ -4,6 +4,7 @@ window.addEventListener("DOMContentLoaded", function () {
         const randomButton = document.querySelector("#button-random-dog");
         const showButton = document.querySelector("#button-show-breed");
         const showSubBreedBtn = document.querySelector("#button-show-sub-breed");
+        const showAllBreedsBtn = document.querySelector("#button-show-all");
 
         document.addEventListener("click", async function (evt) {
             if (evt.target === randomButton) {
@@ -32,6 +33,11 @@ window.addEventListener("DOMContentLoaded", function () {
                 }
 
             }
+            if (evt.target === showAllBreedsBtn) {
+                const response = await showAllBreeds();
+                // createList(response);
+                console.log(response);
+            }
         })
 
         async function getRandomImage() {
@@ -45,6 +51,36 @@ window.addEventListener("DOMContentLoaded", function () {
             createList(result);
             return result;
         }
+
+        async function showAllBreeds() {
+            let result = await fetch("https://dog.ceo/api/breeds/list/all");
+            const data = await result.json();
+            const infoFormAPI = data.message;
+            console.log(infoFormAPI);
+            const ul = document.createElement("ul");
+            const ol = document.createElement("ol");
+            for (let breed in infoFormAPI) {
+                const li = document.createElement("li");
+                li.textContent = breed;
+                if (infoFormAPI[breed].length > 0) {
+                    const subUl = document.createElement("ul");
+                    const subLi = document.createElement("li");
+                    let subBreedArr = [];
+                    for (let i = 0; i < infoFormAPI[breed].length; i++) {
+                        subBreedArr.push(infoFormAPI[breed][i]);
+                    }
+                    let subBreedList = subBreedArr.join(", ");
+                    subLi.innerText = subBreedList;
+                    subUl.appendChild(subLi);
+                    li.appendChild(subUl);
+                }
+                ol.appendChild(li);
+            }
+            content.innerHTML = "";
+            content.appendChild(ol);
+        }
+
+
         async function getInfoFromApi(param) {
             const breed = document.querySelector("#input-breed").value.toLowerCase();
             const response = await fetch(`https://dog.ceo/api/breed/${breed}/${param}`);
@@ -73,3 +109,5 @@ window.addEventListener("DOMContentLoaded", function () {
         }
     }
 )
+
+
