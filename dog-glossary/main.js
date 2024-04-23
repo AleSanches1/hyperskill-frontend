@@ -13,11 +13,11 @@ window.addEventListener("DOMContentLoaded", function () {
             }
             if (evt.target === showButton) {
                 const response = await getInfoFromApi("images/random");
-                if (response) {
-                    content.innerHTML = `<img src = "${response}" alt = "dog" />`
-                } else {
+                if(!response){
                     displayErrorMessage("Breed not found!")
                     return;
+                }else{
+                    content.innerHTML = `<img src = "${response}" alt = "dog" />`
                 }
 
             }
@@ -34,9 +34,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
             }
             if (evt.target === showAllBreedsBtn) {
-                const response = await showAllBreeds();
-                // createList(response);
-                console.log(response);
+                await showAllBreeds();
             }
         })
 
@@ -53,24 +51,17 @@ window.addEventListener("DOMContentLoaded", function () {
         }
 
         async function showAllBreeds() {
-            let result = await fetch("https://dog.ceo/api/breeds/list/all");
-            const data = await result.json();
-            const infoFormAPI = data.message;
-            console.log(infoFormAPI);
-            const ul = document.createElement("ul");
+            const response = await fetch("https://dog.ceo/api/breeds/list/all");
+            const data = await response.json();
+            const breeds = data.message;
             const ol = document.createElement("ol");
-            for (let breed in infoFormAPI) {
+            for (const breed in breeds) {
                 const li = document.createElement("li");
                 li.textContent = breed;
-                if (infoFormAPI[breed].length > 0) {
+                if (breeds[breed].length > 0) {
                     const subUl = document.createElement("ul");
                     const subLi = document.createElement("li");
-                    let subBreedArr = [];
-                    for (let i = 0; i < infoFormAPI[breed].length; i++) {
-                        subBreedArr.push(infoFormAPI[breed][i]);
-                    }
-                    let subBreedList = subBreedArr.join(", ");
-                    subLi.innerText = subBreedList;
+                    subLi.innerText = breeds[breed].join(", ");
                     subUl.appendChild(subLi);
                     li.appendChild(subUl);
                 }
@@ -78,8 +69,8 @@ window.addEventListener("DOMContentLoaded", function () {
             }
             content.innerHTML = "";
             content.appendChild(ol);
+            return breeds;
         }
-
 
         async function getInfoFromApi(param) {
             const breed = document.querySelector("#input-breed").value.toLowerCase();
@@ -109,5 +100,3 @@ window.addEventListener("DOMContentLoaded", function () {
         }
     }
 )
-
-
