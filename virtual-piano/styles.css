@@ -1,0 +1,17 @@
+body{
+    background: #327746;
+}
+.container{
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+kbd{
+    background: #fff;
+    display: inline-block;
+    width: 40px;
+    height: 200px;
+    border: 1px solid #ccc;
+    text-align: center;
+}
